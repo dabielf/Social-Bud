@@ -6,8 +6,21 @@ import { useUserContacts } from "@/lib/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NewContactDialogTrigger } from "@/components/dialogs/newContactDialog";
 import { ContactDropdownMenu } from "@/components/menus/contactMenu";
+import { motion } from "framer-motion";
 
 export default function Profile() {
+	return (
+		<motion.div
+			animate={{ opacity: 1, y: 10 }}
+			initial={{ opacity: 0, y: 25 }}
+			exit={{ opacity: 0 }}
+		>
+			<ProfilePage />
+		</motion.div>
+	);
+}
+
+function ProfilePage() {
 	const userData = useUserContacts();
 
 	if (userData.isPending) {
@@ -21,7 +34,7 @@ export default function Profile() {
 
 	if (contacts.length === 0) {
 		return (
-			<div className="flex flex-col gap-4 mt-2 px-4 w-full">
+			<div className="flex flex-col gap-4 mt-2 w-full">
 				<div className="flex flex-row items-center w-full justify-between">
 					<h1 className="text-4xl font-bold">Contacts</h1>
 					<NewContactDialogTrigger />
@@ -32,7 +45,7 @@ export default function Profile() {
 	}
 
 	return (
-		<div className="flex flex-col gap-4 mt-2 px-4 w-full">
+		<div className="flex flex-col gap-4 mt-2 w-full">
 			<div className="flex flex-row items-center w-full justify-between">
 				<h1 className="text-4xl font-bold">Contacts</h1>
 				<NewContactDialogTrigger />

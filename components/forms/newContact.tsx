@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
 	name: z.string().min(2, {
@@ -38,6 +39,7 @@ export function NewContactForm({
 	onSubmitForm,
 }: { onSubmitForm?: () => void }) {
 	const createUserContact = useCreateUserContact();
+	const router = useRouter();
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -47,7 +49,7 @@ export function NewContactForm({
 	});
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
-		const contact = await createUserContact({
+		const contactId = await createUserContact({
 			name: data.name,
 			type: data.type,
 		});
@@ -57,13 +59,14 @@ export function NewContactForm({
 			description: (
 				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
 					<code className="text-white">
-						{JSON.stringify({ ...data, _id: contact }, null, 2)}
+						{JSON.stringify({ ...data, _id: contactId }, null, 2)}
 					</code>
 				</pre>
 			),
 		});
 		if (onSubmitForm) onSubmitForm();
 		form.reset();
+		router.push(`/contacts/${contactId}`);
 	}
 
 	return (

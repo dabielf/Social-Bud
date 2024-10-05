@@ -57,7 +57,7 @@ export function ContactNameForm() {
 	const edited = form.getValues("name") !== contact.name;
 
 	return (
-		<div className="flex flex-col w-full group">
+		<div className="flex flex-col w-full group text-white">
 			{/* <h2 className="text-xl font-bold text-primary/70">Name</h2> */}
 
 			{edit ? (
@@ -98,7 +98,7 @@ export function ContactNameForm() {
 					<h1 className="text-3xl font-bold">{contact.name}</h1>
 					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
-						className="transition-opacity opacity-0 group-hover:opacity-100 hover:cursor-pointer text-primary/70 hover:text-primary"
+						className="transition-opacity opacity-0 group-hover:opacity-100 hover:cursor-pointer"
 						onClick={() => setEdit(true)}
 					>
 						<Pencil size={24} />
