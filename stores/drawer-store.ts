@@ -1,4 +1,3 @@
-import { DeleteContactDialog } from "@/components/dialogs/deleteContactDialog";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { createStore } from "zustand/vanilla";
 

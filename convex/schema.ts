@@ -26,8 +26,9 @@ export default defineSchema(
 			userId: v.id("users"),
 			name: v.string(),
 			imgUrl: v.optional(v.string()),
-			imgUrlId: v.optional(v.id("_storage")),
+			imgUrlId: v.optional(v.string()),
 			type: ContactType,
+			birthday: v.optional(v.number()),
 			isPinned: v.optional(v.boolean()),
 			totalEntries: v.optional(v.number()),
 			mostRecentEntryDate: v.optional(v.number()),
@@ -36,32 +37,14 @@ export default defineSchema(
 			nextEntryId: v.optional(v.id("events")),
 			contactInterval: v.optional(v.number()),
 			snooze: v.optional(v.boolean()),
-			archived: v.boolean(),
+			isFavorite: v.optional(v.boolean()),
+			isArchived: v.optional(v.boolean()),
 			archivedReason: v.optional(v.string()),
 		})
 			.index("by_user", ["userId"])
 			.index("by_name", ["name"])
-			.index("by_user_archived", ["userId", "archived"])
+			.index("by_user_archived", ["userId", "isArchived"])
 			.index("by_user_type", ["userId", "type"]),
-		contactInfos: defineTable({
-			userId: v.id("users"),
-			contactId: v.id("contacts"),
-			contactInfo: v.optional(v.string()),
-			location: v.optional(v.string()),
-			messagingApp: v.optional(v.string()),
-			birthdayDate: v.optional(
-				v.object({
-					day: v.number(),
-					month: v.number(),
-					year: v.optional(v.number()),
-				}),
-			),
-
-			totalContacts: v.optional(v.number()),
-			totalInPerson: v.optional(v.number()),
-		})
-			.index("by_user", ["userId"])
-			.index("by_contact_id", ["contactId"]),
 		contactActivities: defineTable({
 			userId: v.id("users"),
 			contactId: v.id("contacts"),
@@ -92,7 +75,8 @@ export default defineSchema(
 			entryType: ContactEntryType,
 			contactName: v.string(),
 			date: v.number(),
-			noteId: v.optional(v.id("notes")),
+			content: v.string(),
+			// noteId: v.optional(v.id("notes")),
 		})
 			.index("by_user", ["userId"])
 			.index("by_contact_id", ["contactId"])
@@ -102,13 +86,13 @@ export default defineSchema(
 		notes: defineTable({
 			userId: v.id("users"),
 			contactId: v.id("contacts"),
-			entryId: v.id("entries"),
+			// entryId: v.id("entries"),
 			content: v.string(),
 			date: v.number(),
 		})
 			.index("by_user", ["userId"])
 			.index("by_contact_id", ["contactId"])
-			.index("by_entry", ["entryId"])
+			// .index("by_entry", ["entryId"])
 			.index("by_date", ["date"]),
 	},
 	// If you ever get an error about schema mismatch

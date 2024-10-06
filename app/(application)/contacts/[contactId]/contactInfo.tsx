@@ -100,50 +100,24 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ContactBirthdayForm } from "@/components/forms/contacts/contactBirthday";
 
 export default function ContactInfo() {
 	return (
 		<Accordion type="single" collapsible className="w-full">
 			<AccordionItem value="item-1">
 				<AccordionTrigger>History</AccordionTrigger>
-				<AccordionContent asChild>
-					<Card>
-						<CardHeader>
-							<CardTitle>Account</CardTitle>
-							<CardDescription>
-								Make changes to your account here. Click save when you&apos;re
-								done.
-							</CardDescription>
-						</CardHeader>
-						<CardContent className="space-y-2">
-							<div className="space-y-1">
-								<Label htmlFor="name">Name</Label>
-								<Input id="name" defaultValue="Pedro Duarte" />
-							</div>
-							<div className="space-y-1">
-								<Label htmlFor="username">Username</Label>
-								<Input id="username" defaultValue="@peduarte" />
-							</div>
-						</CardContent>
-						<CardFooter>
-							<Button>Save changes</Button>
-						</CardFooter>
-					</Card>
-				</AccordionContent>
+				<AccordionContent asChild>Contact History</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="item-2">
 				<AccordionTrigger>Infos</AccordionTrigger>
 				<AccordionContent>
-					Yes. It comes with default styles that matches the other
-					components&apos; aesthetic.
+					<ContactBirthdayForm />
 				</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="item-3">
 				<AccordionTrigger>Settings</AccordionTrigger>
-				<AccordionContent>
-					Yes. It&apos;s animated by default, but you can disable it if you
-					prefer.
-				</AccordionContent>
+				<AccordionContent>Contact Settings</AccordionContent>
 			</AccordionItem>
 		</Accordion>
 	);

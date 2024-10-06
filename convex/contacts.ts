@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 
 import { userMutation, userQuery } from "./helpers";
-import { mutation } from "./_generated/server";
 import { ContactEntryType } from "./types";
 
 export const getUserContacts = userQuery({
@@ -40,8 +39,8 @@ export const createUserContact = userMutation({
 		const contact = await ctx.db.insert("contacts", {
 			userId: user._id,
 			name,
+			isArchived: false,
 			type,
-			archived: false,
 		});
 		return contact;
 	},
@@ -65,13 +64,6 @@ export const deleteUserContact = userMutation({
 				console.log(e);
 			}
 		}
-
-		// Contact Infos
-		const contactInfos = await ctx.db
-			.query("contactInfos")
-			.withIndex("by_contact_id", (q) => q.eq("contactId", contactId))
-			.unique();
-		if (contactInfos?._id) await ctx.db.delete(contactInfos._id);
 
 		// Contact Activities
 		const contactActivities = await ctx.db
@@ -139,8 +131,12 @@ export const updateUserContact = userMutation({
 				v.literal("date"),
 			),
 		),
+		birthday: v.optional(v.number()),
 	},
-	handler: async (ctx, { contactId, name, type, imgUrl, isPinned }) => {
+	handler: async (
+		ctx,
+		{ contactId, name, type, imgUrl, isPinned, birthday },
+	) => {
 		const user = ctx.user;
 		const contact = await ctx.db.get(contactId);
 		if (!contact) return null;
@@ -150,6 +146,7 @@ export const updateUserContact = userMutation({
 			type: type || contact.type,
 			imgUrl: imgUrl || contact.imgUrl,
 			isPinned: isPinned || contact.isPinned,
+			birthday: birthday || contact.birthday,
 		});
 
 		return contactUpdatedId;

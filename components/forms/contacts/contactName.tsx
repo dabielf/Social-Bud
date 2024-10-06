@@ -3,7 +3,6 @@
 
 import { useUpdateUserContact } from "@/lib/hooks";
 import { ContactContext } from "./contactContext";
-import type { Id } from "@/convex/_generated/dataModel";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +14,6 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
