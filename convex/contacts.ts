@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 
 import { userMutation, userQuery } from "./helpers";
-import { ContactEntryType } from "./types";
 
 export const getUserContacts = userQuery({
 	args: {},
@@ -150,38 +149,5 @@ export const updateUserContact = userMutation({
 		});
 
 		return contactUpdatedId;
-	},
-});
-
-export const addContactEntry = userMutation({
-	args: {
-		contactId: v.id("contacts"),
-		entryType: ContactEntryType,
-		contactName: v.string(),
-		date: v.number(),
-		note: v.string(),
-	},
-	handler: async (ctx, { contactId, entryType, contactName, date, note }) => {
-		const user = ctx.user;
-		const contact = await ctx.db.get(contactId);
-		if (!contact) return null;
-
-		const entry = await ctx.db.insert("entries", {
-			userId: user._id,
-			contactId: contact._id,
-			entryType,
-			contactName,
-			date,
-		});
-
-		const newNote = await ctx.db.insert("notes", {
-			userId: user._id,
-			contactId: contact._id,
-			entryId: entry,
-			content: note,
-			date,
-		});
-
-		return { entry, note: newNote };
 	},
 });

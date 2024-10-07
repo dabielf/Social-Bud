@@ -2,6 +2,16 @@ import { useQuery } from "convex-helpers/react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+// import type { paginationOptsValidator } from "convex/server";
+
+type paginationOptsValidator = {
+	id?: number | undefined;
+	endCursor?: string | null | undefined;
+	maximumRowsRead?: number | undefined;
+	maximumBytesRead?: number | undefined;
+	numItems: number;
+	cursor: string | null;
+};
 
 export function useCurrentUser() {
 	return useQuery(api.users.currentUser, {});
@@ -25,4 +35,27 @@ export function useUpdateUserContact() {
 
 export function useDeleteUserContact() {
 	return useMutation(api.contacts.deleteUserContact);
+}
+
+export function useGetEntry(entryId: Id<"entries">) {
+	return useQuery(api.entries.getEntry, { entryId });
+}
+
+export function useContactEntries(
+	contactId: Id<"contacts">,
+	paginationOpts: paginationOptsValidator,
+) {
+	return useQuery(api.entries.getContactEntries, { contactId, paginationOpts });
+}
+
+export function useCreateContactEntry() {
+	return useMutation(api.entries.createContactEntry);
+}
+
+export function useUpdateContactEntry() {
+	return useMutation(api.entries.editContactEntry);
+}
+
+export function useDeleteContactEntry() {
+	return useMutation(api.entries.deleteContactEntry);
 }

@@ -1,21 +1,17 @@
 import { v } from "convex/values";
 
 import { userMutation, userQuery } from "./helpers";
-import { ContactEntryType } from "./types";
 import { paginationOptsValidator } from "convex/server";
 
 export const createContactEntry = userMutation({
 	args: {
 		contactId: v.id("contacts"),
-		entryType: ContactEntryType,
+		inPerson: v.boolean(),
 		contactName: v.string(),
 		date: v.number(),
 		content: v.string(),
 	},
-	handler: async (
-		ctx,
-		{ contactId, entryType, contactName, date, content },
-	) => {
+	handler: async (ctx, { contactId, inPerson, contactName, date, content }) => {
 		const user = ctx.user;
 		const contact = await ctx.db.get(contactId);
 		if (!contact) return null;
@@ -23,11 +19,14 @@ export const createContactEntry = userMutation({
 		const entry = await ctx.db.insert("entries", {
 			userId: user._id,
 			contactId: contact._id,
-			entryType,
+
+			inPerson,
 			contactName,
 			date,
 			content,
 		});
+
+		console.log("entry", entry);
 
 		return entry;
 	},
@@ -36,12 +35,12 @@ export const createContactEntry = userMutation({
 export const editContactEntry = userMutation({
 	args: {
 		entryId: v.id("entries"),
-		entryType: v.optional(ContactEntryType),
+		inPerson: v.optional(v.boolean()),
 		contactName: v.optional(v.string()),
 		date: v.optional(v.number()),
 		content: v.optional(v.string()),
 	},
-	handler: async (ctx, { entryId, entryType, contactName, date, content }) => {
+	handler: async (ctx, { entryId, inPerson, contactName, date, content }) => {
 		const user = ctx.user;
 		const entry = await ctx.db.get(entryId);
 
@@ -52,7 +51,7 @@ export const editContactEntry = userMutation({
 		}
 
 		const updatedFields: Partial<typeof entry> = {};
-		if (entryType !== undefined) updatedFields.entryType = entryType;
+		if (inPerson !== undefined) updatedFields.inPerson = inPerson;
 		if (contactName !== undefined) updatedFields.contactName = contactName;
 		if (date !== undefined) updatedFields.date = date;
 		if (content !== undefined) updatedFields.content = content;
@@ -62,7 +61,7 @@ export const editContactEntry = userMutation({
 	},
 });
 
-// method for deletuig a contact entry
+// method for deleting contact entries
 export const deleteContactEntry = userMutation({
 	args: {
 		entryId: v.id("entries"),
@@ -77,6 +76,29 @@ export const deleteContactEntry = userMutation({
 		}
 
 		await ctx.db.delete(entryId);
+		return entry;
+	},
+});
+
+export const getContactEntries = userQuery({
+	args: {
+		contactId: v.id("contacts"),
+		paginationOpts: paginationOptsValidator,
+	},
+	handler: async (ctx, { contactId, paginationOpts }) => {
+		const query = ctx.db
+			.query("entries")
+			.withIndex("by_contact_id", (q) => q.eq("contactId", contactId))
+			.paginate(paginationOpts);
+
+		return await query;
+	},
+});
+
+export const getEntry = userQuery({
+	args: { entryId: v.id("entries") },
+	handler: async (ctx, { entryId }) => {
+		const entry = await ctx.db.get(entryId);
 		return entry;
 	},
 });

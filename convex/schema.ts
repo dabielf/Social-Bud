@@ -4,7 +4,7 @@
 
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
-import { ActivityStatusType, ContactEntryType, ContactType } from "./types";
+import { ActivityStatusType, ContactType } from "./types";
 
 export default defineSchema(
 	{
@@ -72,27 +72,26 @@ export default defineSchema(
 		entries: defineTable({
 			userId: v.id("users"),
 			contactId: v.id("contacts"),
-			entryType: ContactEntryType,
+			// entryType: ContactEntryType,
+			inPerson: v.boolean(),
 			contactName: v.string(),
 			date: v.number(),
 			content: v.string(),
-			// noteId: v.optional(v.id("notes")),
 		})
 			.index("by_user", ["userId"])
 			.index("by_contact_id", ["contactId"])
 			.index("by_user_contact", ["userId", "contactId"])
-			.index("by_entryType", ["entryType"])
+			// .index("by_entryType", ["entryType"])
+			.index("by_inPerson", ["inPerson"])
 			.index("by_date", ["date"]),
 		notes: defineTable({
 			userId: v.id("users"),
 			contactId: v.id("contacts"),
-			// entryId: v.id("entries"),
 			content: v.string(),
 			date: v.number(),
 		})
 			.index("by_user", ["userId"])
 			.index("by_contact_id", ["contactId"])
-			// .index("by_entry", ["entryId"])
 			.index("by_date", ["date"]),
 	},
 	// If you ever get an error about schema mismatch

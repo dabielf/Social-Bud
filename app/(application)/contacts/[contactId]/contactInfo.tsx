@@ -1,5 +1,6 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -93,7 +94,7 @@ import { Label } from "@/components/ui/label";
 // 		</Tabs>
 // 	);
 // }
-
+import { format } from "date-fns";
 import {
 	Accordion,
 	AccordionContent,
@@ -101,13 +102,51 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ContactBirthdayForm } from "@/components/forms/contacts/contactBirthday";
+import { useContactEntries } from "@/lib/hooks";
+import type { Doc, Id } from "@/convex/_generated/dataModel";
 
-export default function ContactInfo() {
+type ContactInfoProps = {
+	contact: Doc<"contacts">;
+};
+
+export function EntryList({ entries }: { entries?: Doc<"entries">[] }) {
+	if (!entries) return null;
+	if (entries.length === 0) return <div>No entries</div>;
+	return (
+		<div className="flex flex-col gap-2">
+			{entries.map((entry) => (
+				<div key={entry._id} className="flex flex-col w-full">
+					<div className="flex flex-row items-center w-full gap-2">
+						<h1 className="text-3xl font-bold">
+							{format(new Date(entry.date), "PPP")}
+						</h1>
+						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+						<div>{entry.content}</div>
+					</div>
+					<p className="text-sm">{entry.content}</p>
+				</div>
+			))}
+		</div>
+	);
+}
+
+export default function ContactInfo({ contact }: ContactInfoProps) {
+	const { contactId } = useParams();
+
+	const entriesRequest = useContactEntries(contactId as Id<"contacts">, {
+		numItems: 3,
+		cursor: null,
+	});
+
+	console.log({ entriesRequest });
+
 	return (
 		<Accordion type="single" collapsible className="w-full">
 			<AccordionItem value="item-1">
-				<AccordionTrigger>History</AccordionTrigger>
-				<AccordionContent asChild>Contact History</AccordionContent>
+				<AccordionTrigger>Journal Entries</AccordionTrigger>
+				<AccordionContent asChild>
+					<EntryList entries={entriesRequest?.data?.page} />
+				</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="item-2">
 				<AccordionTrigger>Infos</AccordionTrigger>

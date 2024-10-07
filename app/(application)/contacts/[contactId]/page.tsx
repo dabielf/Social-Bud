@@ -13,7 +13,19 @@ import { useParams } from "next/navigation";
 import { UploadButton } from "@/utils/uploadthing";
 import ContactInfo from "./contactInfo";
 import { Button } from "@/components/ui/button";
+import {
+	Drawer,
+	DrawerClose,
+	DrawerContent,
+	DrawerDescription,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerTitle,
+	DrawerTrigger,
+} from "@/components/ui/drawer";
 import { motion } from "framer-motion";
+import EntryForm from "@/components/forms/newEntryForm";
+import { NewEntryDialog } from "@/components/dialogs/newEntryDialog";
 
 export default function Profile() {
 	const { contactId } = useParams();
@@ -48,6 +60,7 @@ export default function Profile() {
 						</Link>
 						<Image
 							className="object-cover w-full h-full rounded-lg border-none"
+							priority
 							src={contact.imgUrl || ""}
 							alt={contact.name}
 							width={360}
@@ -80,7 +93,8 @@ export default function Profile() {
 						</h1>
 					</div>
 					<div className="grid grid-cols-2 gap-4">
-						<Button>Add Entry</Button>
+						<NewEntryDialog contact={contact} />
+
 						<Button>Add Note</Button>
 					</div>
 					<ContactInfo />
