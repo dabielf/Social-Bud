@@ -116,13 +116,11 @@ export function EntryList({ entries }: { entries?: Doc<"entries">[] }) {
 		<div className="flex flex-col gap-2">
 			{entries.map((entry) => (
 				<div key={entry._id} className="flex flex-col w-full">
-					<div className="flex flex-row items-center w-full gap-2">
-						<h1 className="text-3xl font-bold">
-							{format(new Date(entry.date), "PPP")}
-						</h1>
-						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-						<div>{entry.content}</div>
-					</div>
+					<h1 className="text-xl font-bold">
+						{format(new Date(entry.date), "PPP")}
+					</h1>
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+
 					<p className="text-sm">{entry.content}</p>
 				</div>
 			))}
