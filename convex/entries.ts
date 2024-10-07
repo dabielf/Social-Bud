@@ -27,7 +27,10 @@ export const createContactEntry = userMutation({
 		});
 
 		console.log("entry", entry);
-
+		const newTotalEntries = contact.totalEntries ? contact.totalEntries + 1 : 1;
+		await ctx.db.patch(contact._id, {
+			totalEntries: newTotalEntries,
+		});
 		return entry;
 	},
 });
@@ -76,6 +79,12 @@ export const deleteContactEntry = userMutation({
 		}
 
 		await ctx.db.delete(entryId);
+		const contact = await ctx.db.get(entry.contactId);
+		if (!contact) return null;
+		const newTotalEntries = contact.totalEntries ? contact.totalEntries - 1 : 0;
+		await ctx.db.patch(contact._id, {
+			totalEntries: newTotalEntries,
+		});
 		return entry;
 	},
 });

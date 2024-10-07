@@ -31,6 +31,7 @@ export default defineSchema(
 			birthday: v.optional(v.number()),
 			isPinned: v.optional(v.boolean()),
 			totalEntries: v.optional(v.number()),
+			totalNotes: v.optional(v.number()),
 			mostRecentEntryDate: v.optional(v.number()),
 			mostRecentEntryId: v.optional(v.id("entries")),
 			nextEntryDate: v.optional(v.number()),

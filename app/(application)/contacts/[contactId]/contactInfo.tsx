@@ -119,8 +119,6 @@ export function EntryList({ entries }: { entries?: Doc<"entries">[] }) {
 					<h1 className="text-xl font-bold">
 						{format(new Date(entry.date), "PPP")}
 					</h1>
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-
 					<p className="text-sm">{entry.content}</p>
 				</div>
 			))}
@@ -141,7 +139,9 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 	return (
 		<Accordion type="single" collapsible className="w-full">
 			<AccordionItem value="item-1">
-				<AccordionTrigger>Journal Entries</AccordionTrigger>
+				<AccordionTrigger>
+					Journal Entries ({contact.totalEntries ? contact.totalEntries : 0})
+				</AccordionTrigger>
 				<AccordionContent asChild>
 					<EntryList entries={entriesRequest?.data?.page} />
 				</AccordionContent>
@@ -153,6 +153,10 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 				</AccordionContent>
 			</AccordionItem>
 			<AccordionItem value="item-3">
+				<AccordionTrigger>Notes</AccordionTrigger>
+				<AccordionContent>No Notes Yet</AccordionContent>
+			</AccordionItem>
+			<AccordionItem value="item-4">
 				<AccordionTrigger>Settings</AccordionTrigger>
 				<AccordionContent>Contact Settings</AccordionContent>
 			</AccordionItem>
