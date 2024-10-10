@@ -12,7 +12,7 @@ import {
 
 import { useDrawerStore } from "@/providers/drawer-store-provider";
 import type { Doc } from "@/convex/_generated/dataModel";
-import NewEntryForm from "../forms/newEntryForm";
+import { NewEntryForm } from "../forms/newEntryForm";
 
 export function NewEntryDialog({ contact }: { contact: Doc<"contacts"> }) {
 	const { setNewEntryDrawer, newEntryDrawerOpen } = useDrawerStore(

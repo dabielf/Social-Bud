@@ -110,11 +110,10 @@ export function NewNoteDialog({ contact, note, onSubmitForm }: NoteFormProps) {
 				<Button variant="outline">Add Note</Button>
 			</DialogTrigger>
 			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Add a new note for {contact.name}</DialogTitle>
-					{/* <DialogDescription>
-						Add a new note to your contact. You can use Markdown syntax.
-					</DialogDescription> */}
+				<DialogHeader className="mb-4">
+					<DialogTitle className="text-left">
+						New Note for {contact.name}
+					</DialogTitle>
 				</DialogHeader>
 				<NewNoteForm
 					contact={contact}

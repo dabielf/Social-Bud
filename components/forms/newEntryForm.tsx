@@ -14,6 +14,14 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
@@ -30,6 +38,7 @@ import { cn } from "@/lib/utils";
 
 interface EntryFormProps {
 	contact: Doc<"contacts">;
+	entry?: Doc<"entries">;
 	onSubmitForm?: () => void;
 }
 
@@ -39,17 +48,14 @@ const FormSchema = z.object({
 	content: z.string().min(10).max(500),
 });
 
-export default function NewEntryForm({
-	contact,
-	onSubmitForm,
-}: EntryFormProps) {
+export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 	const createEntry = useCreateContactEntry();
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
-			inPerson: false,
-			date: new Date(),
-			content: "",
+			inPerson: entry?.inPerson || false,
+			date: entry?.date ? new Date(entry?.date) : new Date(),
+			content: entry?.content || "",
 		},
 	});
 
@@ -153,5 +159,31 @@ export default function NewEntryForm({
 				</Button>
 			</form>
 		</Form>
+	);
+}
+
+export function NewEntryDialog({
+	contact,
+	entry,
+	onSubmitForm,
+}: EntryFormProps) {
+	return (
+		<Dialog>
+			<DialogTrigger asChild>
+				<Button variant="outline">Add Note</Button>
+			</DialogTrigger>
+			<DialogContent>
+				<DialogHeader className="mb-4">
+					<DialogTitle className="text-left">
+						New Journal Entry for {contact.name}
+					</DialogTitle>
+				</DialogHeader>
+				<NewEntryForm
+					contact={contact}
+					entry={entry}
+					onSubmitForm={onSubmitForm}
+				/>
+			</DialogContent>
+		</Dialog>
 	);
 }

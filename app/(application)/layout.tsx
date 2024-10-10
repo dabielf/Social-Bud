@@ -54,11 +54,14 @@ export default function RootLayout({
 									Menu
 								</Button>
 							</SheetTrigger>
-							<SheetContent className="flex flex-col justify-between max-w-xs">
+							<SheetContent
+								className="flex flex-col justify-between max-w-xs"
+								side={"left"}
+							>
 								{/* <SheetHeader>
 									<SheetTitle className="hidden">Navigation Menu</SheetTitle>
 								</SheetHeader> */}
-								<div className="grid gap-4 py-4">
+								<div className="flex flex-col gap-4 py-4">
 									<SheetLink href="/home">Home</SheetLink>
 									<SheetLink href="/contacts">Contacts</SheetLink>
 									<SheetLink href="/profile">Profile</SheetLink>
@@ -102,7 +105,12 @@ function SheetLink({
 }: { href: string; children: React.ReactNode }) {
 	return (
 		<SheetClose asChild>
-			<Link href={href}>{children}</Link>
+			<Link
+				className="no-underline hover:tracking-wider transition-all"
+				href={href}
+			>
+				{children}
+			</Link>
 		</SheetClose>
 	);
 }

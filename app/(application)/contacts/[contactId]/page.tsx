@@ -13,7 +13,7 @@ import { UploadButton } from "@/utils/uploadthing";
 import ContactInfo from "./contactInfo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { NewEntryDialog } from "@/components/dialogs/newEntryDialog";
+import { NewEntryDialog } from "@/components/forms/newEntryForm";
 import { NewNoteDialog } from "@/components/forms/newNoteForm";
 
 export default function Profile() {
