@@ -14,6 +14,7 @@ import ContactInfo from "./contactInfo";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { NewEntryDialog } from "@/components/dialogs/newEntryDialog";
+import { NewNoteDialog } from "@/components/forms/newNoteForm";
 
 export default function Profile() {
 	const { contactId } = useParams();
@@ -83,7 +84,7 @@ export default function Profile() {
 					<div className="grid grid-cols-2 gap-4">
 						<NewEntryDialog contact={contact} />
 
-						<Button>Add Note</Button>
+						<NewNoteDialog contact={contact} />
 					</div>
 					<ContactInfo contact={contact} />
 				</div>

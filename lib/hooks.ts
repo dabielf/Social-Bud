@@ -59,3 +59,15 @@ export function useUpdateContactEntry() {
 export function useDeleteContactEntry() {
 	return useMutation(api.entries.deleteContactEntry);
 }
+
+export function useCreateContactNote() {
+	return useMutation(api.notes.createNote);
+}
+
+export function useUpdateContactNote() {
+	return useMutation(api.notes.updateNote);
+}
+
+export function useDeleteContactNote() {
+	return useMutation(api.notes.deleteNote);
+}

@@ -20,6 +20,7 @@ import type * as files from "../files.js";
 import type * as helpers from "../helpers.js";
 import type * as http from "../http.js";
 import type * as myFunctions from "../myFunctions.js";
+import type * as notes from "../notes.js";
 import type * as types from "../types.js";
 import type * as users from "../users.js";
 
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   helpers: typeof helpers;
   http: typeof http;
   myFunctions: typeof myFunctions;
+  notes: typeof notes;
   types: typeof types;
   users: typeof users;
 }>;

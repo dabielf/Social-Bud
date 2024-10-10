@@ -88,6 +88,7 @@ export default defineSchema(
 		notes: defineTable({
 			userId: v.id("users"),
 			contactId: v.id("contacts"),
+			title: v.string(),
 			content: v.string(),
 			date: v.number(),
 		})

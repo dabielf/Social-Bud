@@ -137,29 +137,31 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 	console.log({ entriesRequest });
 
 	return (
-		<Accordion type="single" collapsible className="w-full">
-			<AccordionItem value="item-1">
-				<AccordionTrigger>
-					Journal Entries ({contact.totalEntries ? contact.totalEntries : 0})
-				</AccordionTrigger>
-				<AccordionContent asChild>
-					<EntryList entries={entriesRequest?.data?.page} />
-				</AccordionContent>
-			</AccordionItem>
-			<AccordionItem value="item-2">
-				<AccordionTrigger>Infos</AccordionTrigger>
-				<AccordionContent>
-					<ContactBirthdayForm />
-				</AccordionContent>
-			</AccordionItem>
-			<AccordionItem value="item-3">
-				<AccordionTrigger>Notes</AccordionTrigger>
-				<AccordionContent>No Notes Yet</AccordionContent>
-			</AccordionItem>
-			<AccordionItem value="item-4">
-				<AccordionTrigger>Settings</AccordionTrigger>
-				<AccordionContent>Contact Settings</AccordionContent>
-			</AccordionItem>
-		</Accordion>
+		<div>
+			<Accordion type="single" collapsible className="w-full">
+				<AccordionItem value="item-1">
+					<AccordionTrigger>
+						Journal Entries ({contact.totalEntries ? contact.totalEntries : 0})
+					</AccordionTrigger>
+					<AccordionContent asChild>
+						<EntryList entries={entriesRequest?.data?.page} />
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem value="item-2">
+					<AccordionTrigger>Infos</AccordionTrigger>
+					<AccordionContent>
+						<ContactBirthdayForm />
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem value="item-3">
+					<AccordionTrigger>Notes</AccordionTrigger>
+					<AccordionContent>Notes</AccordionContent>
+				</AccordionItem>
+				<AccordionItem value="item-4">
+					<AccordionTrigger>Settings</AccordionTrigger>
+					<AccordionContent>Contact Settings</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</div>
 	);
 }
