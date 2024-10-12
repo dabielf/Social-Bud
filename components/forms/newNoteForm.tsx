@@ -84,7 +84,7 @@ export function NewNoteForm({ contactId, note, onSubmitForm }: NoteFormProps) {
 						<FormItem>
 							<FormLabel>Title</FormLabel>
 							<FormControl>
-								<Input {...field} />
+								<Input className="text-md" {...field} />
 							</FormControl>
 							{/* <FormDescription>Min 10 characters, max 500</FormDescription> */}
 							<FormMessage />
