@@ -5,9 +5,13 @@ import { ConvexClientProvider } from "./ConvexClientProvider";
 import { DrawerStoreProvider } from "@/providers/drawer-store-provider";
 import { DeleteContactDialog } from "@/components/dialogs/deleteContactDialog";
 import { NewContactDialog } from "@/components/dialogs/newContactDialog";
-import { DeleteNoteDialog } from "@/components/dialogs/notesDialogs";
-import { Edit } from "lucide-react";
+import {
+	DeleteEntryDialog,
+	DeleteNoteDialog,
+} from "@/components/dialogs/notesDialogs";
+import { Delete, Edit } from "lucide-react";
 import { EditNoteDialog } from "@/components/forms/newNoteForm";
+import { EditEntryDialog } from "@/components/forms/newEntryForm";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -20,9 +24,11 @@ function Dialogs() {
 	return (
 		<>
 			<DeleteNoteDialog />
+			<DeleteEntryDialog />
 			<DeleteContactDialog />
 			<NewContactDialog />
 			<EditNoteDialog />
+			<EditEntryDialog />
 		</>
 	);
 }

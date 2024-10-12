@@ -26,18 +26,22 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import type { Doc } from "@/convex/_generated/dataModel";
-import { useCreateContactEntry } from "@/lib/hooks";
+import type { Doc, Id } from "@/convex/_generated/dataModel";
+import {
+	useCreateContactEntry,
+	useGetContact,
+	useUpdateContactEntry,
+} from "@/lib/hooks";
 import { useDrawerStore } from "@/providers/drawer-store-provider";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, PlusIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Pencil, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 interface EntryFormProps {
-	contact: Doc<"contacts">;
+	contactId: Id<"contacts">;
 	entry?: Doc<"entries">;
 	onSubmitForm?: () => void;
 }
@@ -48,8 +52,15 @@ const FormSchema = z.object({
 	content: z.string().min(10).max(500),
 });
 
-export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
+export function NewEntryForm({
+	contactId,
+	entry,
+	onSubmitForm,
+}: EntryFormProps) {
 	const createEntry = useCreateContactEntry();
+	const updateEntry = useUpdateContactEntry();
+	const contactRequest = useGetContact(contactId);
+
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -59,15 +70,27 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 		},
 	});
 
+	if (!contactRequest.data) return null;
+	const contact = contactRequest.data;
+
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		console.log("data", data);
-		await createEntry({
-			contactId: contact._id,
-			contactName: contact.name,
-			inPerson: data.inPerson,
-			date: data.date.valueOf(),
-			content: data.content,
-		});
+		if (entry) {
+			await updateEntry({
+				entryId: entry._id,
+				inPerson: data.inPerson,
+				date: data.date.valueOf(),
+				content: data.content,
+			});
+		} else {
+			await createEntry({
+				contactId: contact._id,
+				contactName: contact.name,
+				inPerson: data.inPerson,
+				date: data.date.valueOf(),
+				content: data.content,
+			});
+		}
 		if (onSubmitForm) onSubmitForm();
 		form.reset();
 	}
@@ -155,15 +178,50 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 				/>
 
 				<Button type="submit" className="w-full">
-					Add Journal Entry
+					{entry ? "Edit Journal Entry" : "Add Journal Entry"}
 				</Button>
 			</form>
 		</Form>
 	);
 }
 
+export function EditEntryDialog() {
+	const { setEditEntryDrawer, editEntryDrawerEntry } = useDrawerStore(
+		(state) => state,
+	);
+
+	if (!editEntryDrawerEntry) return null;
+
+	return (
+		<Dialog
+			open={!!editEntryDrawerEntry}
+			onOpenChange={() => setEditEntryDrawer()}
+		>
+			<Button
+				variant="outline"
+				className="px-4 flex items-center gap-2 text-sm"
+				onClick={() => setEditEntryDrawer(editEntryDrawerEntry)}
+			>
+				<Pencil className="h-5 w-5" />
+				Edit Entry
+			</Button>
+
+			<DialogContent>
+				<DialogHeader className="mb-4">
+					<DialogTitle className="text-left">Edit Journal Entry</DialogTitle>
+				</DialogHeader>
+				<NewEntryForm
+					contactId={editEntryDrawerEntry?.contactId}
+					entry={editEntryDrawerEntry}
+					onSubmitForm={() => setEditEntryDrawer()}
+				/>
+			</DialogContent>
+		</Dialog>
+	);
+}
+
 export function NewEntryDialog({
-	contact,
+	contactId,
 	entry,
 	onSubmitForm,
 }: EntryFormProps) {
@@ -188,12 +246,10 @@ export function NewEntryDialog({
 			{/* </DialogTrigger> */}
 			<DialogContent>
 				<DialogHeader className="mb-4">
-					<DialogTitle className="text-left">
-						New Journal Entry - {contact.name}
-					</DialogTitle>
+					<DialogTitle className="text-left">New Journal Entry</DialogTitle>
 				</DialogHeader>
 				<NewEntryForm
-					contact={contact}
+					contactId={contactId}
 					entry={entry}
 					onSubmitForm={() => setNewEntryDrawer(false)}
 				/>

@@ -28,7 +28,9 @@ import { NewNoteForm } from "../forms/newNoteForm";
 import { useState } from "react";
 import { DialogPortal } from "@radix-ui/react-dialog";
 import {
+	DeleteEntryDialogTrigger,
 	DeleteNoteDialogTrigger,
+	EditEntryDialogTrigger,
 	EditNoteDialogTrigger,
 } from "../dialogs/notesDialogs";
 
@@ -78,6 +80,32 @@ export function ContactNoteDropdownMenu({
 						</DropdownMenuItem>
 						<DropdownMenuItem>
 							<DeleteNoteDialogTrigger note={note} />
+						</DropdownMenuItem>
+					</DropdownMenuGroup>
+				</DropdownMenuContent>
+			</DropdownMenuPortal>
+		</DropdownMenu>
+	);
+}
+
+export function ContactEntryDropdownMenu({
+	entry,
+}: { contact: Doc<"contacts">; entry: Doc<"entries"> }) {
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<Button variant="ghost">
+					<Ellipsis size={12} />
+				</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuPortal>
+				<DropdownMenuContent>
+					<DropdownMenuGroup>
+						<DropdownMenuItem>
+							<EditEntryDialogTrigger entry={entry} />
+						</DropdownMenuItem>
+						<DropdownMenuItem>
+							<DeleteEntryDialogTrigger entry={entry} />
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 				</DropdownMenuContent>
