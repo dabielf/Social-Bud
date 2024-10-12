@@ -98,6 +98,7 @@ export const getContactEntries = userQuery({
 		const query = ctx.db
 			.query("entries")
 			.withIndex("by_contact_id", (q) => q.eq("contactId", contactId))
+			.order("desc")
 			.paginate(paginationOpts);
 
 		return await query;

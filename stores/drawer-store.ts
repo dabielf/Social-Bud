@@ -5,12 +5,14 @@ import { createStore } from "zustand/vanilla";
 export type DrawerState = {
 	newContactDrawerOpen: boolean;
 	newEntryDrawerOpen: boolean;
+	newNoteDrawerOpen: boolean;
 	deleteDrawerContact: Doc<"contacts"> | undefined;
 };
 
 export type DrawerActions = {
 	setNewContactDrawer: (open: boolean) => void;
 	setNewEntryDrawer: (open: boolean) => void;
+	setNewNoteDrawer: (open: boolean) => void;
 	setDeleteContactDrawer: (contact?: Doc<"contacts">) => void;
 };
 
@@ -20,6 +22,7 @@ export const initDrawerStore = (): DrawerState => {
 	return {
 		newContactDrawerOpen: false,
 		newEntryDrawerOpen: false,
+		newNoteDrawerOpen: false,
 		deleteDrawerContact: undefined,
 	};
 };
@@ -27,6 +30,7 @@ export const initDrawerStore = (): DrawerState => {
 export const defaultInitState: DrawerState = {
 	newContactDrawerOpen: false,
 	newEntryDrawerOpen: false,
+	newNoteDrawerOpen: false,
 	deleteDrawerContact: undefined,
 };
 
@@ -39,6 +43,8 @@ export const createDrawerStore = (
 			set((_state) => ({ newContactDrawerOpen: open })),
 		setNewEntryDrawer: (open: boolean) =>
 			set((_state) => ({ newEntryDrawerOpen: open })),
+		setNewNoteDrawer: (open: boolean) =>
+			set((_state) => ({ newNoteDrawerOpen: open })),
 		setDeleteContactDrawer: (contact?: Doc<"contacts">) =>
 			set((_state) => ({ deleteDrawerContact: contact || undefined })),
 	}));

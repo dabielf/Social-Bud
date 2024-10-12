@@ -28,6 +28,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { useCreateContactEntry } from "@/lib/hooks";
+import { useDrawerStore } from "@/providers/drawer-store-provider";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
@@ -85,7 +86,7 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 									onCheckedChange={field.onChange}
 								/>
 							</FormControl>
-							<div className="space-y-1 leading-none">
+							<div className="space-y-1 leading-none font-md">
 								<FormLabel>In Person?</FormLabel>
 							</div>
 						</FormItem>
@@ -104,7 +105,7 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 										<Button
 											variant={"outline"}
 											className={cn(
-												"w-[240px] pl-3 text-left font-normal",
+												"w-[240px] pl-3 text-left font-md",
 												!field.value && "text-muted-foreground",
 											)}
 										>
@@ -142,8 +143,8 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 							<FormLabel>Notes</FormLabel>
 							<FormControl>
 								<Textarea
-									placeholder="Tell us a little bit about yourself"
-									className="resize-none"
+									placeholder="What happened?"
+									className="resize-none text-md"
 									{...field}
 								/>
 							</FormControl>
@@ -166,17 +167,25 @@ export function NewEntryDialog({
 	entry,
 	onSubmitForm,
 }: EntryFormProps) {
+	const { setNewEntryDrawer, newEntryDrawerOpen } = useDrawerStore(
+		(state) => state,
+	);
+
 	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button
-					variant="outline"
-					className="px-4 flex items-center gap-2 text-sm"
-				>
-					<PlusIcon className="h-5 w-5" />
-					Add Journal Entry
-				</Button>
-			</DialogTrigger>
+		<Dialog
+			open={newEntryDrawerOpen}
+			onOpenChange={() => setNewEntryDrawer(false)}
+		>
+			{/* <DialogTrigger asChild> */}
+			<Button
+				variant="outline"
+				className="px-4 flex items-center gap-2 text-sm"
+				onClick={() => setNewEntryDrawer(true)}
+			>
+				<PlusIcon className="h-5 w-5" />
+				Add Journal Entry
+			</Button>
+			{/* </DialogTrigger> */}
 			<DialogContent>
 				<DialogHeader className="mb-4">
 					<DialogTitle className="text-left">
@@ -186,7 +195,7 @@ export function NewEntryDialog({
 				<NewEntryForm
 					contact={contact}
 					entry={entry}
-					onSubmitForm={onSubmitForm}
+					onSubmitForm={() => setNewEntryDrawer(false)}
 				/>
 			</DialogContent>
 		</Dialog>

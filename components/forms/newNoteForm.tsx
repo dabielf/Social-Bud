@@ -25,6 +25,7 @@ import { useCreateContactNote } from "@/lib/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useDrawerStore } from "@/providers/drawer-store-provider";
 
 interface NoteFormProps {
 	contact: Doc<"contacts">;
@@ -99,14 +100,24 @@ export function NewNoteForm({ contact, note, onSubmitForm }: NoteFormProps) {
 }
 
 export function NewNoteDialog({ contact, note, onSubmitForm }: NoteFormProps) {
+	const { setNewNoteDrawer, newNoteDrawerOpen } = useDrawerStore(
+		(state) => state,
+	);
+
 	return (
-		<Dialog>
-			<DialogTrigger asChild>
-				<Button variant="outline" className="px-4 flex  gap-2 text-sm">
-					<PlusIcon className="h-5 w-5" />
-					Add Note
-				</Button>
-			</DialogTrigger>
+		<Dialog
+			open={newNoteDrawerOpen}
+			onOpenChange={() => setNewNoteDrawer(false)}
+		>
+			<Button
+				variant="outline"
+				className="px-4 flex  gap-2 text-sm"
+				onClick={() => setNewNoteDrawer(true)}
+			>
+				<PlusIcon className="h-5 w-5" />
+				Add Note
+			</Button>
+
 			<DialogContent>
 				<DialogHeader className="mb-4">
 					<DialogTitle className="text-left">
@@ -116,7 +127,7 @@ export function NewNoteDialog({ contact, note, onSubmitForm }: NoteFormProps) {
 				<NewNoteForm
 					contact={contact}
 					note={note}
-					onSubmitForm={onSubmitForm}
+					onSubmitForm={() => setNewNoteDrawer(false)}
 				/>
 			</DialogContent>
 		</Dialog>
