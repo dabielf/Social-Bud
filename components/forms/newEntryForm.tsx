@@ -2,25 +2,24 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormDescription,
-	FormMessage,
-} from "@/components/ui/form";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Dialog,
 	DialogContent,
-	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import {
 	Popover,
 	PopoverContent,
@@ -29,12 +28,12 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { useCreateContactEntry } from "@/lib/hooks";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { cn } from "@/lib/utils";
 
 interface EntryFormProps {
 	contact: Doc<"contacts">;
@@ -61,7 +60,7 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		console.log("data", data);
-		const entryId = await createEntry({
+		await createEntry({
 			contactId: contact._id,
 			contactName: contact.name,
 			inPerson: data.inPerson,
@@ -87,7 +86,7 @@ export function NewEntryForm({ contact, entry, onSubmitForm }: EntryFormProps) {
 								/>
 							</FormControl>
 							<div className="space-y-1 leading-none">
-								<FormLabel>In Person</FormLabel>
+								<FormLabel>In Person?</FormLabel>
 							</div>
 						</FormItem>
 					)}
@@ -170,7 +169,7 @@ export function NewEntryDialog({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="outline">Add Note</Button>
+				<Button variant="outline">Add Journal Entry</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader className="mb-4">

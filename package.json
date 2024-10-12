@@ -51,6 +51,7 @@
     "@uploadthing/react": "^6.7.2",
     "@xixixao/uploadstuff": "^0.0.5",
     "autoprefixer": "10.4.15",
+    "biome": "^0.3.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",

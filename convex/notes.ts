@@ -1,7 +1,6 @@
 import { v } from "convex/values";
 
 import { userMutation, userQuery } from "./helpers";
-import { paginationOptsValidator } from "convex/server";
 
 // create note for contact
 export const createNote = userMutation({
@@ -23,6 +22,10 @@ export const createNote = userMutation({
 			title,
 			content,
 			date,
+		});
+		const totalNotes = contact.totalNotes ? contact.totalNotes + 1 : 1;
+		await ctx.db.patch(contact._id, {
+			totalNotes: totalNotes,
 		});
 
 		return note;
@@ -50,17 +53,14 @@ export const updateNote = userMutation({
 });
 
 export const getContactNotes = userQuery({
-	args: {
-		contactId: v.id("contacts"),
-		paginationOpts: paginationOptsValidator,
-	},
-	handler: async (ctx, { contactId, paginationOpts }) => {
-		const query = ctx.db
+	args: { contactId: v.id("contacts") },
+	handler: async (ctx, args) => {
+		const notes = await ctx.db
 			.query("notes")
-			.withIndex("by_contact_id", (q) => q.eq("contactId", contactId))
-			.paginate(paginationOpts);
-
-		return await query;
+			.filter((q) => q.eq(q.field("contactId"), args.contactId))
+			.order("desc")
+			.collect();
+		return notes;
 	},
 });
 
