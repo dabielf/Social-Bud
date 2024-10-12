@@ -49,9 +49,7 @@ export function DeleteContactDialog() {
 			<DrawerPortal>
 				<DrawerContent className="sm:max-w-[425px]">
 					<DrawerHeader>
-						<DrawerTitle>
-							Delete &rdquo;{deleteDrawerContact.name}&ldquo;
-						</DrawerTitle>
+						<DrawerTitle>Delete {deleteDrawerContact.name}</DrawerTitle>
 					</DrawerHeader>
 					<div className="px-4 py-4 text-center text-destructive font-medium underline">
 						Are you sure ? This action cannot be undone!

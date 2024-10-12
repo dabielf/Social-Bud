@@ -28,6 +28,7 @@ export default defineSchema(
 			imgUrl: v.optional(v.string()),
 			imgUrlId: v.optional(v.string()),
 			type: ContactType,
+			daysBeforeContact: v.optional(v.number()),
 			birthday: v.optional(v.number()),
 			isPinned: v.optional(v.boolean()),
 			totalEntries: v.optional(v.number()),

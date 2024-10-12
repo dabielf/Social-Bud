@@ -19,16 +19,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Tiptap } from "@/components/ui/tiptap";
-import { PlusIcon } from "lucide-react";
-import type { Doc } from "@/convex/_generated/dataModel";
-import { useCreateContactNote } from "@/lib/hooks";
+import { Pencil, PlusIcon } from "lucide-react";
+import type { Doc, Id } from "@/convex/_generated/dataModel";
+import {
+	useCreateContactNote,
+	useGetContact,
+	useUpdateContactNote,
+} from "@/lib/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useDrawerStore } from "@/providers/drawer-store-provider";
+import { updateNote } from "@/convex/notes";
 
 interface NoteFormProps {
-	contact: Doc<"contacts">;
+	contactId: Id<"contacts">;
 	note?: Doc<"notes">;
 	onSubmitForm?: () => void;
 }
@@ -38,8 +43,9 @@ const FormSchema = z.object({
 	content: z.string().min(5),
 });
 
-export function NewNoteForm({ contact, note, onSubmitForm }: NoteFormProps) {
+export function NewNoteForm({ contactId, note, onSubmitForm }: NoteFormProps) {
 	const createNote = useCreateContactNote();
+	const updateNote = useUpdateContactNote();
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -50,11 +56,20 @@ export function NewNoteForm({ contact, note, onSubmitForm }: NoteFormProps) {
 
 	async function onSubmit(data: z.infer<typeof FormSchema>) {
 		console.log("data", data);
-		await createNote({
-			contactId: contact._id,
-			title: data.title,
-			content: data.content,
-		});
+		if (note) {
+			await updateNote({
+				noteId: note._id,
+				title: data.title,
+				content: data.content,
+			});
+		} else {
+			await createNote({
+				contactId,
+				title: data.title,
+				content: data.content,
+			});
+		}
+
 		if (onSubmitForm) onSubmitForm();
 		form.reset();
 	}
@@ -92,14 +107,53 @@ export function NewNoteForm({ contact, note, onSubmitForm }: NoteFormProps) {
 				/>
 
 				<Button type="submit" className="w-full">
-					Add Note
+					{note ? "Edit Note" : "Add Note"}
 				</Button>
 			</form>
 		</Form>
 	);
 }
 
-export function NewNoteDialog({ contact, note, onSubmitForm }: NoteFormProps) {
+export function EditNoteDialog() {
+	const { setEditNoteDrawer, editNoteDrawerNote } = useDrawerStore(
+		(state) => state,
+	);
+
+	if (!editNoteDrawerNote) return null;
+
+	return (
+		<Dialog
+			open={!!editNoteDrawerNote}
+			onOpenChange={() => setEditNoteDrawer()}
+		>
+			<Button
+				variant="outline"
+				className="px-4 flex  gap-2 text-sm"
+				onClick={() => setEditNoteDrawer(editNoteDrawerNote)}
+			>
+				<Pencil className="h-5 w-5" />
+				Edit Note
+			</Button>
+
+			<DialogContent>
+				<DialogHeader className="mb-4">
+					<DialogTitle className="text-left">Edit Note</DialogTitle>
+				</DialogHeader>
+				<NewNoteForm
+					contactId={editNoteDrawerNote?.contactId}
+					note={editNoteDrawerNote}
+					onSubmitForm={() => setEditNoteDrawer()}
+				/>
+			</DialogContent>
+		</Dialog>
+	);
+}
+
+export function NewNoteDialog({
+	contactId,
+	note,
+	onSubmitForm,
+}: NoteFormProps) {
 	const { setNewNoteDrawer, newNoteDrawerOpen } = useDrawerStore(
 		(state) => state,
 	);
@@ -120,12 +174,10 @@ export function NewNoteDialog({ contact, note, onSubmitForm }: NoteFormProps) {
 
 			<DialogContent>
 				<DialogHeader className="mb-4">
-					<DialogTitle className="text-left">
-						New Note for {contact.name}
-					</DialogTitle>
+					<DialogTitle className="text-left">Add a Note</DialogTitle>
 				</DialogHeader>
 				<NewNoteForm
-					contact={contact}
+					contactId={contactId}
 					note={note}
 					onSubmitForm={() => setNewNoteDrawer(false)}
 				/>

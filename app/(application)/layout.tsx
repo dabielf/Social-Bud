@@ -49,7 +49,7 @@ export default function RootLayout({
 						</Link>
 						<Sheet>
 							<SheetTrigger asChild>
-								<Button variant="outline">
+								<Button variant="outline" className="border-none shadow-none">
 									<Menu size={16} className="mr-2" />
 									Menu
 								</Button>

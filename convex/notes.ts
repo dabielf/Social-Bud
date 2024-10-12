@@ -35,9 +35,10 @@ export const createNote = userMutation({
 export const updateNote = userMutation({
 	args: {
 		noteId: v.id("notes"),
+		title: v.optional(v.string()),
 		content: v.string(),
 	},
-	handler: async (ctx, { noteId, content }) => {
+	handler: async (ctx, { noteId, title, content }) => {
 		const user = ctx.user;
 		const note = await ctx.db.get(noteId);
 		if (!note || note.userId !== user._id) {
@@ -46,6 +47,7 @@ export const updateNote = userMutation({
 
 		const updatedFields: Partial<typeof note> = {};
 		updatedFields.content = content;
+		if (title) updatedFields.title = title;
 
 		const updatedNote = await ctx.db.patch(noteId, updatedFields);
 		return updatedNote;
@@ -75,6 +77,13 @@ export const deleteNote = userMutation({
 			throw new Error(
 				"Note not found or you don't have permission to delete it",
 			);
+		}
+		const contact = await ctx.db.get(note.contactId);
+		if (contact) {
+			const totalNotes = contact.totalNotes ? contact.totalNotes - 1 : 0;
+			await ctx.db.patch(contact._id, {
+				totalNotes: totalNotes,
+			});
 		}
 
 		await ctx.db.delete(noteId);

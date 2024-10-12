@@ -7,6 +7,7 @@ import { ContactBirthdayForm } from "@/components/forms/contacts/contactBirthday
 import { useContactEntries, useContactNotes } from "@/lib/hooks";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
 import { AnimatedSection } from "@/components/ui/animated-section";
+import { ContactNoteDropdownMenu } from "@/components/menus/contactMenu";
 
 type ContactInfoProps = {
 	contact: Doc<"contacts">;
@@ -30,18 +31,22 @@ export function EntryList({ entries }: { entries?: Doc<"entries">[] }) {
 }
 
 type NotesListProps = {
+	contact: Doc<"contacts">;
 	notes?: Doc<"notes">[];
 };
 
-export function NotesList({ notes }: NotesListProps) {
+export function NotesList({ contact, notes }: NotesListProps) {
 	if (!notes) return null;
 	if (notes.length === 0) return <div>No entries</div>;
 	return (
 		<div className="flex flex-col gap-2">
 			{notes.map((note) => (
-				<div key={note._id} className="flex flex-col w-full">
-					<h1 className="text-xl font-bold">{note.title}</h1>
-					<p className="text-sm">{note.content}</p>
+				<div key={note._id} className="flex flex-row w-full gap-2">
+					<div key={note._id} className="flex flex-col w-full">
+						<h1 className="text-xl font-bold">{note.title}</h1>
+						<p className="text-sm">{note.content}</p>
+					</div>
+					<ContactNoteDropdownMenu contact={contact} note={note} />
 				</div>
 			))}
 		</div>
@@ -98,7 +103,7 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 				<EntryList entries={entriesRequest?.data?.page} />
 			</AnimatedSection>
 			<AnimatedSection title={notesTitle()}>
-				<NotesList notes={notesRequest?.data} />
+				<NotesList contact={contact} notes={notesRequest?.data} />
 			</AnimatedSection>
 			<AnimatedSection title="Infos">Infos Section</AnimatedSection>
 
