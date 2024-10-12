@@ -31,7 +31,7 @@ import { useCreateContactEntry } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -169,12 +169,18 @@ export function NewEntryDialog({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="outline">Add Journal Entry</Button>
+				<Button
+					variant="outline"
+					className="px-4 flex items-center gap-2 text-sm"
+				>
+					<PlusIcon className="h-5 w-5" />
+					Add Journal Entry
+				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader className="mb-4">
 					<DialogTitle className="text-left">
-						New Journal Entry for {contact.name}
+						New Journal Entry - {contact.name}
 					</DialogTitle>
 				</DialogHeader>
 				<NewEntryForm

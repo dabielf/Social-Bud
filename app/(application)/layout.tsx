@@ -78,7 +78,7 @@ export default function RootLayout({
 						</Sheet>
 					</div>
 				</StickyHeader>
-				<main className="max-w-sm min-w-[384px] mx-auto">{children}</main>
+				<main className="max-w-sm min-w-[384px] mx-auto px-2">{children}</main>
 
 				{/* <div className="inset-0 flex flex-row w-full h-[calc(100vh-50px)]">
 					<aside className="inset-y-0 left-0 w-48  pt-4 pl-4 shadow-md block">

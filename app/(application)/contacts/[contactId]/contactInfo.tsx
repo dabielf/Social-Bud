@@ -2,12 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import { ContactBirthdayForm } from "@/components/forms/contacts/contactBirthday";
 import { useContactEntries, useContactNotes } from "@/lib/hooks";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
@@ -39,13 +34,6 @@ type NotesListProps = {
 };
 
 export function NotesList({ notes }: NotesListProps) {
-	// const notesRequest = useContactNotes(contactId);
-
-	// if (!notesRequest) return null;
-	// if (notesRequest.isPending) return null;
-	// if (notesRequest.isError) return null;
-	// if (notesRequest.data.length === 0) return <p>No notes yet.</p>;
-
 	if (!notes) return null;
 	if (notes.length === 0) return <div>No entries</div>;
 	return (
@@ -97,9 +85,6 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 			case 0:
 				text = "Notes (No notes yet)";
 				break;
-			// case 1:
-			// 	text = "Notes (1 note)";
-			// 	break;
 			default:
 				text = `Notes - ${contact.totalNotes} `;
 				break;
@@ -115,33 +100,9 @@ export default function ContactInfo({ contact }: ContactInfoProps) {
 			<AnimatedSection title={notesTitle()}>
 				<NotesList notes={notesRequest?.data} />
 			</AnimatedSection>
+			<AnimatedSection title="Infos">Infos Section</AnimatedSection>
 
-			<Accordion type="single" collapsible className="w-full">
-				<AccordionItem value="item-1">
-					<AccordionTrigger>
-						Journal Entries ({contact.totalEntries ? contact.totalEntries : 0})
-					</AccordionTrigger>
-					<AccordionContent asChild>
-						<EntryList entries={entriesRequest?.data?.page} />
-					</AccordionContent>
-				</AccordionItem>
-				<AccordionItem value="item-2">
-					<AccordionTrigger>Infos</AccordionTrigger>
-					<AccordionContent>
-						<ContactBirthdayForm />
-					</AccordionContent>
-				</AccordionItem>
-				<AccordionItem value="item-3">
-					<AccordionTrigger>{notesTitle()}</AccordionTrigger>
-					<AccordionContent>
-						<NotesList notes={notesRequest?.data} />
-					</AccordionContent>
-				</AccordionItem>
-				<AccordionItem value="item-4">
-					<AccordionTrigger>Settings</AccordionTrigger>
-					<AccordionContent>Contact Settings</AccordionContent>
-				</AccordionItem>
-			</Accordion>
+			<AnimatedSection title="Settings">Settings Section</AnimatedSection>
 		</div>
 	);
 }
